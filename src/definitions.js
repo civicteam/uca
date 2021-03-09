@@ -1192,6 +1192,13 @@ const definitions = [
     credentialItem: false,
   },
   {
+    identifier: 'cvc:Type:ImageRefFormat',
+    version: '1',
+    type: 'String',
+    attestable: false,
+    credentialItem: false,
+  },
+  {
     identifier: 'cvc:Type:ImageRef',
     version: '1',
     type: {
@@ -1202,7 +1209,7 @@ const definitions = [
         },
         {
           name: 'format', // base64 | IDScan
-          type: 'String',
+          type: 'cvc:Type:ImageRefFormat',
         },
       ],
     },
