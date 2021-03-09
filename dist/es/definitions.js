@@ -571,7 +571,17 @@ const definitions = [{
 }, {
   identifier: 'cvc:Type:documentType',
   version: '1',
-  type: 'String'
+  type: 'String',
+  enum: {
+    UK_BIOMETRIC_RESIDENCE_PERMIT: 'uk_biometric_residence_permit',
+    BIOMETRIC_RESIDENCE_PERMIT: 'biometric_residence_permit',
+    DRIVING_LICENSE: 'driving_license',
+    NATIONAL_IDENTITY_CARD: 'national_identity_card',
+    PASSPORT: 'passport',
+    TAX_ID: 'tax_id',
+    UNKNOWN: 'unknown',
+    VOTER_ID: 'voter_id'
+  }
 }, {
   identifier: 'cvc:Document:type',
   version: '1',
@@ -949,6 +959,12 @@ const definitions = [{
   attestable: false,
   credentialItem: false
 }, {
+  identifier: 'cvc:Type:ImageRefFormat',
+  version: '1',
+  type: 'String',
+  attestable: false,
+  credentialItem: false
+}, {
   identifier: 'cvc:Type:ImageRef',
   version: '1',
   type: {
@@ -957,7 +973,7 @@ const definitions = [{
       type: 'cvc:Type:S3FileRef'
     }, {
       name: 'format', // base64 | IDScan
-      type: 'String'
+      type: 'cvc:Type:ImageRefFormat'
     }]
   }
 }, {
