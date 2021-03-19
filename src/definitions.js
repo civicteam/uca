@@ -1203,7 +1203,7 @@ const definitions = [
     type: {
       properties: [
         {
-          name: 's3FileRef',
+          name: 'S3FileRef',
           type: 'cvc:Type:S3FileRef',
         },
         {
