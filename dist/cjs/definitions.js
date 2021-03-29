@@ -582,6 +582,7 @@ const definitions = [{
     PASSPORT: 'passport',
     TAX_ID: 'tax_id',
     UNKNOWN: 'unknown',
+    VISA: 'visa',
     VOTER_ID: 'voter_id'
   }
 }, {
