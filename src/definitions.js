@@ -1,7 +1,7 @@
 /* eslint-disable no-template-curly-in-string */
 // ######################################### DEFINITIONS ###########################################
 
-// TODO split definiton of Evidences
+// TODO split definition of Evidences
 const definitions = [
   {
     identifier: 'cvc:Meta:issuer',
@@ -720,6 +720,7 @@ const definitions = [
       PASSPORT: 'passport',
       TAX_ID: 'tax_id',
       UNKNOWN: 'unknown',
+      VISA: 'visa',
       VOTER_ID: 'voter_id',
     },
   },
@@ -1181,6 +1182,87 @@ const definitions = [
     version: '1',
     type: 'String',
     attestable: true,
+  },
+  {
+    identifier: 'cvc:Type:identityAuthId',
+    description: 'Auth identifier',
+    version: '1',
+    type: 'String',
+    attestable: false,
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:ImageRef:format',
+    version: '1',
+    type: 'String',
+    attestable: false,
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:Type:ImageRef',
+    version: '1',
+    type: {
+      properties: [
+        {
+          name: 'S3FileRef',
+          type: 'cvc:Type:S3FileRef',
+        },
+        {
+          name: 'format', // base64 | IDScan
+          type: 'cvc:ImageRef:format',
+        },
+      ],
+    },
+  },
+  {
+    identifier: 'cvc:Type:DocumentImages',
+    version: '1',
+    type: 'Array',
+    items: {
+      type: 'cvc:Type:ImageRef',
+    },
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:Type:SelfieImage',
+    version: '1',
+    type: 'cvc:Type:ImageRef',
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:Type:appId',
+    description: 'Application Identifier',
+    version: '1',
+    type: 'String',
+    attestable: false,
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:Type:appIdType',
+    description: 'Application Identifier Type',
+    version: '1',
+    type: 'String',
+    attestable: false,
+    credentialItem: false,
+  },
+  {
+    identifier: 'cvc:Document:appId',
+    version: '1',
+    type: {
+      properties: [
+        {
+          name: 'appId',
+          type: 'cvc:Type:appId',
+        },
+        {
+          name: 'appIdType',
+          type: 'cvc:Type:appIdType',
+        },
+      ],
+      required: ['appId'],
+    },
+    attestable: false,
+    credentialItem: false,
   },
   {
     identifier: 'cvc:Type:identityAuthId',

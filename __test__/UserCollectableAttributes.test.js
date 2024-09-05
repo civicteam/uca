@@ -96,13 +96,13 @@ describe('UCA Constructions tests', () => {
     expect(createUCA).toThrow();
   });
 
-  test('Should not throw an error when constructing UCA with any document type', () => {
+  test('Should throw error when constructing UCA with a value not in the enum definition', () => {
     const identifier = 'cvc:Document:type';
-    const value = 'any-document-type';
+    const value = 'invalid-document-type';
     function createUCA() {
       return new UCA(identifier, value);
     }
-    expect(createUCA).not.toThrowError();
+    expect(createUCA).toThrowError();
   });
 
   test('Should construct UCA when value is in the enum definition', () => {
@@ -767,8 +767,10 @@ describe('UCA Constructions tests', () => {
     });
 
     it('Should flatten structure UCA with 1 level and typedef', () => {
-      const ucaObject = new UCA('cvc:Identity:name',
-        { givenNames: 'Joao', otherNames: 'Barbosa', familyNames: 'Santos' });
+      const ucaObject = new UCA(
+        'cvc:Identity:name',
+        { givenNames: 'Joao', otherNames: 'Barbosa', familyNames: 'Santos' },
+      );
       const flat = ucaObject.getFlattenValue();
       expect(flat).toBeDefined();
       expect(flat).toHaveLength(3);
@@ -836,44 +838,53 @@ describe('UCA Constructions tests', () => {
     });
 
     it('Should unflatten a simple UCA', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Document:number',
-        [{ name: 'cvc:Document:number', value: 'a1b2c3-3c2b1a' }]);
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Document:number',
+        [{ name: 'cvc:Document:number', value: 'a1b2c3-3c2b1a' }],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Document:number');
       expect(ucaObject.value).toBe('a1b2c3-3c2b1a');
     });
 
     it('Should unflatten a typedef UCA', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Verify:emailToken',
-        [{ name: 'cvc:Verify:emailToken', value: '12345' }]);
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Verify:emailToken',
+        [{ name: 'cvc:Verify:emailToken', value: '12345' }],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Verify:emailToken');
       expect(ucaObject.value).toBe('12345');
     });
 
     it('Should unflatten structure UCA with 1 level', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Type:Name',
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Type:Name',
         [
           { name: 'cvc:Name:givenNames', value: 'Joao' },
           { name: 'cvc:Name:otherNames', value: 'Barbosa' },
-          { name: 'cvc:Name:familyNames', value: 'Santos' }]);
+          { name: 'cvc:Name:familyNames', value: 'Santos' }],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Type:Name');
     });
 
     it('Should unflatten structure UCA with 2 level', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Type:email',
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Type:email',
         [
           { name: 'cvc:Email:username', value: 'joao' },
           { name: 'cvc:Domain:name', value: 'civic' },
           { name: 'cvc:Domain:tld', value: 'com' },
-        ]);
+        ],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Type:email');
     });
 
     it('Should unflatten structure UCA with ambiguity', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Document:evidences',
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Document:evidences',
         [
           { name: 'cvc:Hash:algorithm>idDocumentFront', value: 'sha256' },
           { name: 'cvc:Hash:data>idDocumentFront', value: 'sha256(idDocumentFront)' },
@@ -881,13 +892,15 @@ describe('UCA Constructions tests', () => {
           { name: 'cvc:Hash:data>idDocumentBack', value: 'sha256(idDocumentBack)' },
           { name: 'cvc:Hash:algorithm>selfie', value: 'sha256' },
           { name: 'cvc:Hash:data>selfie', value: 'sha256(selfie)' },
-        ]);
+        ],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Document:evidences');
     });
 
     it('Should unflatten an alias for a structure UCA with ambiguity', () => {
-      const ucaObject = UCA.fromFlattenValue('cvc:Validation:evidences',
+      const ucaObject = UCA.fromFlattenValue(
+        'cvc:Validation:evidences',
         [
           { name: 'cvc:Hash:algorithm>idDocumentFront', value: 'sha256' },
           { name: 'cvc:Hash:data>idDocumentFront', value: 'sha256(idDocumentFront)' },
@@ -895,7 +908,8 @@ describe('UCA Constructions tests', () => {
           { name: 'cvc:Hash:data>idDocumentBack', value: 'sha256(idDocumentBack)' },
           { name: 'cvc:Hash:algorithm>selfie', value: 'sha256' },
           { name: 'cvc:Hash:data>selfie', value: 'sha256(selfie)' },
-        ]);
+        ],
+      );
       expect(ucaObject).toBeDefined();
       expect(ucaObject.identifier).toBe('cvc:Validation:evidences');
     });
@@ -904,9 +918,12 @@ describe('UCA Constructions tests', () => {
   describe('UCA with Boolean value', () => {
     describe('from fromFlattenValue', () => {
       it('set value with boolean', () => {
-        expect(UCA.fromFlattenValue(
-          'cvc:Type:externalServiceAuth', [{ name: 'cvc:Type:hasConnected', value: true }],
-        ).getPlainValue()).toBeTruthy();
+        expect(
+          UCA.fromFlattenValue(
+            'cvc:Type:externalServiceAuth',
+            [{ name: 'cvc:Type:hasConnected', value: true }],
+          ).getPlainValue(),
+        ).toBeTruthy();
       });
     });
     describe('from constructor', () => {

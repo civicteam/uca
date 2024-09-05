@@ -1,1 +1,0 @@
-'use strict';var definitions=require("./definitions"),UserCollectableAttribute=require("./UserCollectableAttribute");module.exports={definitions:definitions,UserCollectableAttribute:UserCollectableAttribute};

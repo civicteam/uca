@@ -1,0 +1,121 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - '*'
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: v1-dependencies-${{ hashFiles('package.json', 'package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
+
+      - name: Save dist folder as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifact
+          path: dist/
+
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: v1-dependencies-${{ hashFiles('package.json', 'package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install hub CLI for GitHub releases
+        run: |
+          wget https://github.com/github/hub/releases/download/v2.5.1/hub-linux-amd64-2.5.1.tgz
+          tar xzvf hub-linux-amd64-2.5.1.tgz
+          sudo ./hub-linux-amd64-2.5.1/install
+
+      - name: Configure git
+        run: |
+          git config --global user.email "no-reply@civic.com"
+          git config --global user.name "CI Deployer"
+
+      - name: Create GitHub release
+        run: npm run release:create
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically provides this
+
+      - name: Delete release tag
+        run: |
+          git push --delete origin ${{ github.ref_name }}
+
+      - name: Delete GitHub release
+        run: hub release delete ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifact
+          path: dist/
+
+      - name: Authenticate with npm registry
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Publish to npm
+        run: npm publish --access=public
