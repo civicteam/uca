@@ -1,4 +1,4 @@
-# Identity.com User Collectable Attributes
+# Civic User Collectable Attributes
 
 *Warning:* this still is a working in progress and is not ready for usage yet. Please feel free to explore the code but don't integrate yet. We expect API changes before the 1st release.
 
@@ -43,7 +43,7 @@ node src/index.js decrypt
 ## Installation 
 UCA is an open-source library that has its binary package published on NPM.
 Projects that depend on UCA must install the dependency following this way:
-`npm install --save @identity.com/uca`
+`npm install --save @civic/uca`
 
 All versions follow SemVer (https://semver.org/)
 
