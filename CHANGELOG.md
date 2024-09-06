@@ -1,5 +1,11 @@
 # @civic/uca
 
+## 1.1.4
+
+### Patch Changes
+
+- 6f4e1a7: Changeset test
+
 ## 1.1.3
 
 ### Patch Changes
