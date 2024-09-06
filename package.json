@@ -22,7 +22,7 @@
     "tag": "git tag v$npm_package_version && git push --tags origin master",
     "pretag": "git fetch --tags",
     "precommit": "yarn lint",
-    "release": "yarn build && yarn changesets publish"
+    "release": "yarn build && yarn changeset publish"
   },
   "author": "Civic Community",
   "license": "MIT",
