@@ -1,8 +1,5 @@
 # Civic User Collectable Attributes
 
-*Warning:* this still is a working in progress and is not ready for usage yet. Please feel free to explore the code but don't integrate yet. We expect API changes before the 1st release.
-
-
 ## Summary
 
 This Javascript Library provides functionality around User Collectable Attributes (UCA).
