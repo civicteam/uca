@@ -1,5 +1,11 @@
 # @civic/uca
 
+## 1.1.2
+
+### Patch Changes
+
+- d1fc1bb: Remove WIP label
+
 ## 1.1.1
 
 ### Patch Changes
