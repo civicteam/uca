@@ -482,16 +482,76 @@ Since you used a function before and the function is not evaluated during build,
 
 This is used on this library on src/services/config.js
 
-## Releases
+Certainly! Here's a **README section** that explains to developers how to create new changelogs and release using Changesets, assuming the actual publishing and release process happens automatically via CI.
 
-The release process is fully automated and started by Civic members when it's created a tag on Github following the pattern ^release\\..*$. E.g.: `release.1`.
+---
 
-After the creation of the tag, Circle Ci will trigger a job to:
+## 📦 Releasing and Versioning with Changesets
 
-build source files
-run unit tests
-increase version number on package.json
-create the stable version and tag it. E.g: v0.2.29
-remove the release.N tag
-deploy the binary file to NPM
+We use [Changesets](https://github.com/changesets/changesets) to manage versioning, changelogs, and releases.
+This allows us to generate version updates and changelogs locally, and the release process is automated through our CI pipeline.
+
+### Creating a New Changeset
+
+Whenever you make changes that require a version bump (e.g., a new feature, bug fix, or breaking change), you'll need to create a changeset.
+
+Changesets will automatically handle versioning and updating the changelog.
+
+1. **Run the Changeset Command**:
+
+   In your feature branch, run the following command to create a new changeset:
+
+   ```bash
+   yarn changeset
+   ```
+
+2. **Choose the Type of Change**:
+
+   You'll be prompted to select the type of change:
+  - **Patch**: Bug fixes or small updates.
+  - **Minor**: New features that are backwards-compatible.
+  - **Major**: Breaking changes.
+
+3. **Write a Summary**:
+
+   Add a short description of the changes. This will be added to the changelog for the new version.
+
+4. **Commit the Changeset**:
+
+   A new Markdown file will be created in the `.changeset` folder. Commit this file to your branch:
+
+   ```bash
+   git add .
+   git commit -m "Add changeset for [your changes]"
+   ```
+
+6. **Push Your Branch and Create a Pull Request**:
+
+   Push your feature branch and create a PR. Once this PR is merged, the version bump and release process will automatically be triggered by CI.
+
+   ```bash
+   git push origin your-branch
+   ```
+
+### Releasing a New Version
+
+Once your PR is merged into main, the CI pipeline takes care of the rest:
+
+1.	Release Branch Creation:
+After merging, a GitHub Action will trigger, creating a pull request that contains updated version numbers and changelogs.
+
+This is handled by the Changesets GitHub Action.
+2. Versioning and Changelog:
+The pull request will include a summary of the changes from all pending changesets.
+Once this is merged, the action automatically updates the versions of the packages and edits the changelogs.
+3.	Publishing to npm:
+After the version pull request is merged, the CI workflow will automatically:
+•	Publish the package to npm using yarn changeset publish.
+•	Create a GitHub release with the updated changelogs.
+
+### Important Notes
+
+- **Releasing is automated**: As a developer, you don't need to run `yarn publish` or create the GitHub release manually. CI will handle this after your changes are merged into the `main` branch.
+
+- **Keep Changesets in mind**: Always make sure to add a changeset for any meaningful change that should be reflected in the next release (bug fixes, new features, or breaking changes).
 
