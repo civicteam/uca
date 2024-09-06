@@ -1,6 +1,6 @@
 {
   "name": "@civic/uca",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Provides functionality around User Collectable Attributes (UCA)",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
