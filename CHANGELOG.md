@@ -1,5 +1,11 @@
 # @civic/uca
 
+## 1.1.3
+
+### Patch Changes
+
+- fb6f9c8: Small CI command fix
+
 ## 1.1.2
 
 ### Patch Changes
